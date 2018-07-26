@@ -1,6 +1,11 @@
 import java.io.*;
 import java.util.*;
 
+/*
+Supporting generic class that contains a pair of Variables of the same type. Used here to
+store the coordinates of letters in the 5x5 matrix.
+*/
+
 class Pair <T> {
 	T x, y;
 	boolean fresh;
@@ -27,15 +32,18 @@ class Pair <T> {
 	}
 }
 
+/*
+O(n) Solution to encryption and decryption of Playfair Cipher using reverse index.
+*/
+
 public class Playfair{
 	String text, result;
 	String key;
-	char skipKey = 'z'; //replace with X
+	char skipKey = 'z'; // Replace with X.
 	char replaceKey = 'x';
 
-	char[][] block;
-	HashMap < Character, Pair <Integer> > index;
-	//Pair pair;
+	char[][] block; // 5x5 Array Storing the Square Key.
+	HashMap < Character, Pair <Integer> > index; // Reverse Index for fast Enxcryption and Decryption.
 
 	HashMap <Character, Integer> getOccurenceMap(){
 		HashMap <Character, Integer> hm = new HashMap <Character, Integer> ();
@@ -47,7 +55,7 @@ public class Playfair{
 
 		return hm;
 	}
-	
+
 	String getResult(){
 		return this.result;
 	}
@@ -70,7 +78,7 @@ public class Playfair{
 				j = 0;
 				i += 1;
 			}
-			
+
 			current = this.key.charAt(keyCount);
 			if(current == this.skipKey){
 				current = this.replaceKey;
@@ -122,162 +130,162 @@ public class Playfair{
         	System.out.println("");
         }
 		System.out.println("");
-	}	
-	
+	}
+
 	public void encrypter(){
 		System.out.println("Encrypting...\n");
 		String result = "";
 		char a, b;
 		int nextx, nexty;
-		
+
 		//Padding replacement character
 		this.text = this.text.toLowerCase();
 		//if (this.text.length() % 2 == 1)
 		//	this.text = this.text + Character.toString(this.replaceKey);
-		
+
 		for(int i = 0; i <= this.text.length() - 2; i+=2){
 			a = this.text.charAt(i);
 			if (i < this.text.length())
 				b = this.text.charAt(i + 1);
-			else	
+			else
 				b = this.replaceKey;
-						
+
 			if (a == this.skipKey)
 				a = this.replaceKey;
 			if (b == this.skipKey)
 				b = this.replaceKey;
-			
+
 			if (a == b){
 				b = this.replaceKey;
 				i -= 1;
 			}
-			
+
 			Pair <Integer> posa = this.index.get(a);
 			Pair <Integer> posb = this.index.get(b);
-			
+
 			if (posa.getX() == posb.getX()){
 				nextx = posa.getX();
 				nexty = posa.getY() + 1;
-				
+
 				if (nexty == 5)
-					nexty = 0;	
-					
+					nexty = 0;
+
 				result += Character.toString(block[nextx][nexty]);
-				
+
 				nextx = posb.getX();
 				nexty = posb.getY() + 1;
-				
+
 				if (nexty == 5)
-					nexty = 0;	
-					
+					nexty = 0;
+
 				result += Character.toString(block[nextx][nexty]);
 			}
 			else if (posa.getY() == posb.getY()){
 				nextx = posa.getX() + 1;
 				nexty = posa.getY();
-				
+
 				if (nextx == 5)
-					nextx = 0;	
-					
+					nextx = 0;
+
 				result += Character.toString(block[nextx][nexty]);
-				
+
 				nextx = posb.getX() + 1;
 				nexty = posb.getY();
-				
+
 				if (nextx == 5)
-					nextx = 0;	
-					
+					nextx = 0;
+
 				result += Character.toString(block[nextx][nexty]);
 			}
 			else{
 				nextx = posa.getX();
 				nexty = posb.getY();
-				
+
 				result += Character.toString(block[nextx][nexty]);
-				
+
 				nextx = posb.getX();
 				nexty = posa.getY();
-				
+
 				result += Character.toString(block[nextx][nexty]);
 			}
-		
+
 		this.result = result.toUpperCase();
 		}
 	}
-	
+
 	public void decrypter(){
 		System.out.println("Decrypting...\n");
 		String result = "";
 		char a, b;
 		int nextx, nexty;
-		
+
 		//Padding replacement character
 		this.text = this.text.toLowerCase();
 		if (this.text.length() % 2 == 1)
 			this.text = this.text + Character.toString(this.replaceKey);
-		
+
 		for(int i = 0; i <= this.text.length() - 2; i+=2){
 			a = this.text.charAt(i);
 			b = this.text.charAt(i + 1);
-						
+
 			if (a == this.skipKey)
 				a = this.replaceKey;
 			if (b == this.skipKey)
 				b = this.replaceKey;
-			
+
 			if (a == b){
 				b = this.replaceKey;
 			}
-			
+
 			Pair <Integer> posa = this.index.get(a);
 			Pair <Integer> posb = this.index.get(b);
-			
+
 			if (posa.getX() == posb.getX()){
 				nextx = posa.getX();
 				nexty = posa.getY() - 1;
-				
+
 				if (nexty == -1)
-					nexty = 4;	
-					
+					nexty = 4;
+
 				result += Character.toString(block[nextx][nexty]);
-				
+
 				nextx = posb.getX();
 				nexty = posb.getY() - 1;
-				
+
 				if (nexty == -1)
-					nexty = 4;	
-					
+					nexty = 4;
+
 				result += Character.toString(block[nextx][nexty]);
 			}
 			else if (posa.getY() == posb.getY()){
 				nextx = posa.getX() - 1;
 				nexty = posa.getY();
-				
+
 				if (nextx == -1)
-					nextx = 4;	
-					
+					nextx = 4;
+
 				result += Character.toString(block[nextx][nexty]);
-				
+
 				nextx = posb.getX() - 1;
 				nexty = posb.getY();
-				
+
 				if (nextx == -1)
-					nextx = 4;	
-					
+					nextx = 4;
+
 				result += Character.toString(block[nextx][nexty]);
 			}
 			else{
 				nextx = posa.getX();
 				nexty = posb.getY();
-				
+
 				result += Character.toString(block[nextx][nexty]);
-				
+
 				nextx = posb.getX();
 				nexty = posa.getY();
-				
+
 				result += Character.toString(block[nextx][nexty]);
 			}
-		
+
 		this.result = result.toUpperCase();
 		}
 	}
@@ -288,42 +296,42 @@ public class Playfair{
 		Playfair handler;
 		String key;
 		int choice = 0;
-		
+
 		if (args.length == 1){
 			key = args[0];
 			System.out.println("Enter a message to be encrypted or decrypted:");
 			String message = br.readLine();
-			
+
 			handler = new Playfair(message, key);
 		}
 		else if (args.length == 2){
-			handler = new Playfair(args[1], args[0]); // 0 -> Key Phrase 1 -> Message
+			handler = new Playfair(args[1], args[0]); // 0 -> Key Phrase | 1 -> Message
 		}
 		else if (args.length == 3){
-			handler = new Playfair(args[1], args[0]);
-			choice = Integer.parseInt(args[2]);
+			handler = new Playfair(args[1], args[0]); // 0 -> Key Phrase | 1 -> Message
+			choice = Integer.parseInt(args[2]); // 3 -> (1 Encrypt | 2 Decrypt)
 		}
 		else{
 			System.out.println("Enter a key-phrase to generate the square key:");
 			key = br.readLine();
 			System.out.println("Enter a message to be encrypted or decrypted:");
 			String message = br.readLine();
-			
+
 			handler = new Playfair(message, key);
 		}
-		
+
 		if(choice == 0){
 			System.out.println("Select an option: \n1. Encrypt Text \n2. Decrypt Text");
 			choice = Integer.parseInt(br.readLine());
 		}
-		
+
 		if (choice == 1)
 			handler.encrypter();
 		else if (choice == 2)
 			handler.decrypter();
-		else 
+		else
 			System.out.println("Fatal Error - Unknown Command");
-		
+
 		System.out.println("Result: " + handler.getResult());
 	}
 }
