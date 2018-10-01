@@ -47,10 +47,10 @@ public class Playfair{
 
 	HashMap <Character, Integer> getOccurenceMap(){
 		HashMap <Character, Integer> hm = new HashMap <Character, Integer> ();
-		for( char c = 'a'; (char)c != ('z' + 1); c++){
-			if((char)c == skipKey)
+		for( char c = 'a'; c != ('z' + 1); c++){
+			if(c == skipKey)
 				continue;
-			hm.put((char)c, 0);
+			hm.put(c, 0);
 		}
 
 		return hm;
